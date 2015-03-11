@@ -1,3 +1,5 @@
+# header values for the MONT4k instrument output.
+
 telemetry_card = 0
 exp_time = EXPTIME
 obs_type = IMAGETYP
@@ -6,11 +8,12 @@ posflag = SEXIGESIMAL
 rastring = RA
 decstring = DEC
 ut_time = DATE-OBS
-good_x = 1365
+good_x = 1365   =  this is whatever NAXIS1 is. I need to make this a read-able input. 
 good_y = 1365
 objects = objects
 biases = bias
 flats = flat
+object_title = object
 
 
 

@@ -1,7 +1,7 @@
 telemetry_card = 0
 exp_time = EXPTIME
 obs_type = OBSTYPE
-filter1 = FILTER1
+filter1 = FILTER1  = you could change filter1 and filter2 to be your CMMTOBS tag, then define the filtername in reduce.sc
 filter2 = FILTER2
 posflag = SEXIGESIMAL
 rastring = RASTRNG

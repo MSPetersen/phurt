@@ -125,5 +125,9 @@ def run_all(inscript):
     fullobj = ReduceObject(inscript)
     fullobj.biascombine(True)
     fullobj.flatcombine(True)
+
+    #
+    # Note that if you already have the bias and flat created, you can execute just the ReduceObject() initialization, then this sciencecombine step.
+    #
     fullobj.sciencecombine(True)
 

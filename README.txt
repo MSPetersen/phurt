@@ -24,14 +24,12 @@ The moment of truth:
 
 >>> import Phurt
 
+>>> Phurt.read_cals.DivineObject('/path/to/reduce.sc')
+
 This call creates the filelists from reduce.sc to divine the specific
 components (bias, flat, science--currently no support for darks. Bug
 me if this is important to you). Feel free to stop and use the outputs in IRAF after this
-step (IRAF can recognize the output lists).
-
->>> Phurt.read_cals.DivineObject(/path/to/reduce.sc)
-
-The other reason this is a separate step is that occasionally bad data
+step (IRAF can recognize the output lists). The other reason this is a separate step is that occasionally bad data
 can sneak into the calibrations (you had to flush the detector with a
 bias after a saturation, for example). Take a moment to make sure that
 the files are what you think they are.
@@ -42,7 +40,7 @@ lists in some other way, then do the next step.)
 If you want to press ahead to get a reduced image, type (and be a
 little patient, though you'll get plenty of updates):
 
->>> Phurt.reduce.run_all(/path/to/reduce.sc)
+>>> Phurt.reduce.run_all('/path/to/reduce.sc')
 
 Which will create the output files specified in reduce.sc (in
 nightdir). It's that easy! This operation currently takes ~3 min start
