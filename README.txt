@@ -7,12 +7,12 @@ astropy. This can be easily accomplished by installing Anaconda
 Build the python files in the traditional way
 
 $ cd /where/you/unpacked/Phurt
+
 $ python setup.py install
 
 Make a data reduction script for the object you would like to
-reduce. This needs to be called 'reduce.sc', though a later version
-will hopefully allow an input to be taken here. P-HURT ships with an
-example script in the main Phurt/ directory; copy a version to
+reduce. This can be called anything, it will be passed to P-HURT below. P-HURT ships with an
+example script in the main Phurt/ directory (reduce.sc.example); copy a version to
 whatever directory you'd like to work in. Depending upon your desired operation, this file can hold a variety of
 parameters. They are better explained and exemplified in the example script.
 
