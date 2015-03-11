@@ -1,0 +1,17 @@
+telemetry_card = 0
+exp_time = EXPTIME
+obs_type = IMAGETYP
+filter1 = FILTER
+posflag = SEXIGESIMAL
+rastring = RA
+decstring = DEC
+ut_time = DATE-OBS
+good_x = 1365
+good_y = 1365
+objects = objects
+biases = bias
+flats = flat
+
+
+
+

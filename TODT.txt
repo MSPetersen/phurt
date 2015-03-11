@@ -1,0 +1,9 @@
+Bias characterization: check all the biases for a cap, or dispersion, and just pick the most agreeable 3,4,5?
+
+Same thing with flats.
+
+Allow for use/not use of dark frames.
+
+Still have to carry around two copies of the script reader.
+
+Handle deletion of variables more smoothly.

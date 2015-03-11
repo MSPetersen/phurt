@@ -1,0 +1,27 @@
+#
+# EXAMPLE reduction script for P-HURT
+#
+
+# Comments can exist in this file, provided that they do not have an equals sign. 
+# If they are on a line with a parameter, however, they MUST have an equals sign preceding them.
+#     (Sorry it's such a janky system. Someday I'll make a comment symbol understandable.)
+
+# Note: everything is read in as a string and then manipulated as needed, so don't use any quotation marks!
+
+nightdir = /Volumes/WIYNDATA/jan19/                                = which directory to hunt through for data
+instrument = HDI                                                   = which instrument? (recognizes 'HDI', 'MONT4k')
+filtername = 202                                                   = which filter, as understood by the instrumental header
+
+# Will skim first for name. If objectname is left blank or omitted, on to rapos and decpos! Unfortunately, if name fails, currently breaks. Probably will make an iteration.
+
+objectname = AGC120193
+rapos = 02,23,52.0                                                 = set as rah, ram, ras (likewise for dec)
+decpos = 25,23,44                                                  = this will just hunt for calibration files now
+postol = 60                                                        = search radius aroud ra/dec, in arcsec
+masterbias = /Volumes/WIYNDATA/jan19/masterbias.fits               = desired masterbias output
+biaslist = /Volumes/WIYNDATA/jan19/bias.list
+masterflat = /Volumes/WIYNDATA/jan19/masterflat.fits
+flatlist = /Volumes/WIYNDATA/jan19/flat.list
+finalsci = /Volumes/WIYNDATA/jan19/masterscience.fits
+scilist = /Volumes/WIYNDATA/jan19/science.list
+

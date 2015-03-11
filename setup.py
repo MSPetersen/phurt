@@ -12,9 +12,12 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
 	name='Phurt',
+    version='0.1.1',
 	url='',
 	license='',
 	author='Mike Petersen',
 	description='Python HDI Utilitarian Reduction Tool',
-	packages=['Phurt']
+	packages=find_packages(),
+    package_data={'':['*.dat']},
+    include_package_data=True
 )

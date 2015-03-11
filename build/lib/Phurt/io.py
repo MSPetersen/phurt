@@ -5,68 +5,116 @@ import numpy as np
 from astropy.io import fits
 from astropy.io.fits import getheader
 import glob
-import matplotlib.pyplot as plt
+
+
+class Input():
+
+    #
+    # class to handle inputs, now constructed to make fewer changes elsewhere
+    #
+    
+    def get_header_vals(self,tel_data):
+        """
+
+        Returns a dictionary of the instrument-specific quantities/header values
+
+        """
+        self.header_names = {}
+        
+        f = open(tel_data)
+        for line in f:
+            q = [d for d in line.split('=')]
+            self.header_names[q[0].strip()] = q[1].strip()
+
+
+    def skimheaders(self,infile):
+        #
+        # accept telemetry card as a variable?
+        #
+        cc = fits.open(infile)
+        self.obst = cc[0].header[self.header_names['obs_type']]
+        self.expt = cc[0].header[self.header_names['exp_time']]
+        # object name to go here...
+        self.objn = cc[0].header[self.header_names['object_title']]
+
+        #
+        # guards against multiple filter wheels (needed for HDI data)
+        #
+        try: self.filters = [cc[0].header[self.header_names['filter1']],cc[0].header[self.header_names['filter2']]]
+        except: self.filters = cc[0].header[self.header_names['filter1']]
+
+        
+        if self.header_names['posflag'] == 'SEXIGESIMAL':
+            rast = cc[0].header[self.header_names['rastring']]
+            self.ras = [q.strip('+') for q in rast.split(':')]
+            dect = cc[0].header[self.header_names['decstring']]
+            self.dec = [q.strip('+') for q in dect.split(':')]
+        else:
+            self.ras = cc[0].header[self.header_names['rastring']]
+            self.dec = cc[0].header[self.header_names['dectring']]
+        self.tval = cc[0].header[self.header_names['ut_time']]
+        return self.obst,self.expt,self.filters,self.ras,self.dec,self.tval,self.objn
 
 
 
-def skimheaders(infile):
-    # SKIM HEADERS, VERY DIRTILITY
-    cc = fits.open(infile)
-    obst = cc[0].header['OBSTYPE']
-    expt = cc[0].header['EXPTIME']
-    filters = [cc[0].header['FILTER1'],cc[0].header['FILTER2']]
-    rast = cc[0].header['RASTRNG']
-    ras = [q.strip('+') for q in rast.split(':')]
-    dect = cc[0].header['DECSTRNG']
-    dec = [q.strip('+') for q in dect.split(':')]
-    tval = cc[0].header['DATE-OBS']
-    return obst,expt,filters,ras,dec,tval
+class ImageRead():
+    
+    def get_header_vals(self,tel_data):
+        """
+
+        Returns a dictionary of the instrument-specific quantities/header values
+
+        """
+        self.header_names = {}
+        
+        f = open(tel_data)
+        for line in f:
+            q = [d for d in line.split('=')]
+            self.header_names[q[0].strip()] = q[1].strip()
 
 
-# TRIM HDI IMAGES TO A GOOD VALUE
-def trim_image(img,xdead,ydead):  return img[0:xdead,0:ydead]
-
-
-xdead = 4112
-ydead = 4096
+    def trim_image(self,img):  return img[0:int(self.header_names['good_x']),0:int(self.header_names['good_y'])]
 
 
 
 
-def readimg_quik(infile):
-	# READ IN HDI IMAGES QUICKLY/DIRTILY
-	#     subtract off overscan region if not already done
-  	data,hdr0 = fits.getdata(infile,header=True)
-    	try: 
-    		# check to see if this is an original HDI file, if so, get original telemetry header
-    		hdr1 = fits.getheader(infile,1)
-    		phdr = fits.getheader(infile,0)
-    	except: 
-    		print 'This is not an original HDI file!'
-    		phdr = hdr0
-    	imgout = trim_image(data,xdead,ydead)
-    	return imgout,phdr
+    def readimg_quik(self,infile):
+        # READ IN IMAGES QUICKLY/DIRTILY
+        #     subtract off overscan region if not already done?
+        self.data,self.hdr0 = fits.getdata(infile,header=True)
+        try:
+            self.hdr1 = fits.getheader(infile,1)
+            self.phdr = fits.getheader(infile,0)
+            print infile,'...Reading Card 1...'
+        except: 
+            print infile,'...Reading Header Card 0...'
+            self.phdr = self.hdr0
+        self.imgout = ImageRead.trim_image(self,self.data)
+        return self.imgout,self.phdr
 
 
 
 def read_filelist(infile):
-	#
-	# read in file lists
-	# 
-	filelist = []
-	f = open(infile)
-	for line in f:
-		filelist.append(line)
-	f.close()
-	return np.array(filelist)
+        #
+        # read in file lists
+        # 
+        filelist = []
+        f = open(infile)
+        for line in f:
+            filelist.append(line)
+        f.close()
+        return np.array(filelist)
 
 
 	
-def write_hdi(data,hdr,outfile):
-	#
-	# cleanly write to 
-	#
-	fits.writeto(outfile,data,hdr,clobber=True)
+def write_new_fits(data,hdr,outfile):
+
+    #
+    # might be fun to have an option for lighter/heavier formats...currently set to write 16-bit floats.
+    #
+    
+    dataf = [[float(val) for val in inner] for inner in data]
+    fits.writeto(outfile,dataf,hdr,clobber=True)
 	
 	
 

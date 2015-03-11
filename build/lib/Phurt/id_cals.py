@@ -12,7 +12,6 @@ import Phurt.io as io
 
 
 def breaknight(nightdir):
-	#nightdir = '/home/mpetersen/WIYNDATA/jan19/*.fits'
 	filelist = glob.glob(nightdir+'*.fits')
 	
 	#

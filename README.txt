@@ -1,102 +1,61 @@
-"""
-Getting started with P-HURT
+Getting started with P-HURT v.0.1.1
+
+Ensure that you have a Python distribution with numpy and
+astropy. This can be easily accomplished by installing Anaconda
+(heartily recommended).
 
 Build the python files in the traditional way
 
-$ cd Phurt
+$ cd /where/you/unpacked/Phurt
 $ python setup.py install
 
-Then in python:
+Make a data reduction script for the object you would like to
+reduce. This needs to be called 'reduce.sc', though a later version
+will hopefully allow an input to be taken here. P-HURT ships with an
+example script in the main Phurt/ directory; copy a version to
+whatever directory you'd like to work in. Depending upon your desired operation, this file can hold a variety of
+parameters. They are better explained and exemplified in the example script.
+
+The quickest way from Point A (raw data for an object) and Point B (a
+median stacked image of the observations of that object in a specified
+filter) is done interactively in python.
+
+The moment of truth:
 
 >>> import Phurt
 
-Break up a night into the constituent observations
+This call creates the filelists from reduce.sc to divine the specific
+components (bias, flat, science--currently no support for darks. Bug
+me if this is important to you). Feel free to stop and use the outputs in IRAF after this
+step (IRAF can recognize the output lists).
 
->>> import Phurt.id_cals
->>> nightdir = '/home/mpetersen/WIYNDATA/jan19/'
->>> Phurt.id_cals.breaknight(nightdir)
+>>> Phurt.read_cals.DivineObject(/path/to/reduce.sc)
 
-This will create several files in the chosen directory that can then be fed to Phurt.
-The flat nomenclature is w[wheelnumber]f[filternumber].list, such that wheel 1, filter 0 is w1f0.list
-The bias nomenclature is bias.list
+The other reason this is a separate step is that occasionally bad data
+can sneak into the calibrations (you had to flush the detector with a
+bias after a saturation, for example). Take a moment to make sure that
+the files are what you think they are.
 
-These will come out in whatever directory the data is stored in.
+(Alternately, you could skip this step and make your own input file
+lists in some other way, then do the next step.)
 
-To get the data for a specific object, use
+If you want to press ahead to get a reduced image, type (and be a
+little patient, though you'll get plenty of updates):
 
->>> ra = [01, 32, 14] # the ra string
->>> dec = [28, 53, 57] # the dec string
->>> tol = 60 # the tolerance for pointing, in arcsec
->>> filter = 100 # the filter, in HDI-speak
->>> id_cals.findobject(nightdir,ra,dec,tol,filter)
+>>> Phurt.reduce.run_all(/path/to/reduce.sc)
 
-This will make a list labeled with the coordinates (here it spits out '132+2853.list' in nightdir) 
-
->>> import Phurt.io
->>> Phurt.io.read_filelist(nightdir+'w1f0.list')
-
-Make a median combined version of the flats (must do biases first, which follows the same idea--see below)
-NOTE: This currently allows you to do stupid things with memory allocation, so it can get very broken. Probably don't try this on filelists of more than 8 files (especially not on my shitty 2 GB computer).
-
->>> import Phurt.reduce
->>> comb_img,hdr = Phurt.reduce.flatcombine(nightdir+'w1f0.list','')
+Which will create the output files specified in reduce.sc (in
+nightdir). It's that easy! This operation currently takes ~3 min start
+to finish for 5 bias, 6 flat, 4 science images on a
+2010 2GB Macbook Pro (yes I use a laughably weak computer).
 
 
-Write the file out (including the header!)
-
->>> Phurt.io.write_hdi(comb_img,hdr,nightdir+'w1f0flat.fits')
-
-
-View the file
-NOTE: This requires that ds9 be a command-line-callable option. Otherwise, do it the old-fashioned way with a point and click.
-
->>> import Phurt.viewing
->>> Phurt.viewing.dsdisplay(nightdir+'w1f0flat.fits')
-
-
-
-For those keeping score at home, here's the full script (Note that this whole page is run-able!)
-
-I tested everything below here and it worked on my machine, so let me know if anything breaks for you...
-
-"""
-
-
-import Phurt
-import Phurt.id_cals
-import Phurt.io
-import Phurt.reduce
-import Phurt.viewing
-
-nightdir = '/home/mpetersen/WIYNDATA/jan19/'
-Phurt.id_cals.breaknight(nightdir)
-
-ra = [01, 32, 14] # the ra string
-dec = [28, 53, 57] # the dec string
-tol = 60 # the tolerance for pointing, in arcsec
-filter = 105 # the filter, in HDI-speak
-Phurt.id_cals.findobject(nightdir,ra,dec,tol,filter)
-
-# bias stuff
-
-comb_bias,hdr = Phurt.reduce.biascombine(nightdir+'bias.list',nightdir+'masterbias.fits')
-
-# flat stuff
-
-comb_flat,hdr = Phurt.reduce.flatcombine(nightdir+'w1f0.list',nightdir+'masterbias.fits',nightdir+'w1f0masterflat.fits')
-
-
-# science images?!
-
-scifis = Phurt.io.read_filelist(nightdir+'132+2853.list')
-
-Phurt.reduce.sciencecombine(scifis[0],nightdir+'masterbias.fits',nightdir+'w1f0masterflat.fits',nightdir+'scitest.fits')
-
-
-
-
-
-
+There are also many modular pieces you can edit to suit your own
+purposes, or execute as standalone modules. These are currently best
+understood by examining the code. Please feel free to let me know if
+you run into any bugs, don't understand an operation, or find my
+secret notes in the code about improvements and would like to add them
+to the source.
 
 
 
