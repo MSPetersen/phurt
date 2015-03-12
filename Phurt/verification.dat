@@ -5,7 +5,7 @@ import Phurt.io as io
 combolist = io.read_filelist('/Volumes/WIYNDATA/jan19/bias.list')
 
 IMG = io.ImageRead()
-IMG.get_header_vals('/Users/MSP/PythonLibrary/phurt/Phurt/Phurt/TScopeData/HDI.dat')
+IMG.get_header_vals('/Users/MSP/PythonLibrary/phurt/Phurt/Phurt/TScopeData/MONT4k.dat')
 img1,hdr1 = IMG.readimg_quik(combolist[0].strip())
 
 
@@ -16,22 +16,22 @@ img1,hdr1 = IMG.readimg_quik(combolist[0].strip())
 import Phurt.io as io
 
 tst  = io.Input()
-tst.get_header_vals('/Users/MSP/PythonLibrary/phurt/Phurt/Phurt/TScopeData/HDI.dat')
+tst.get_header_vals('/Users/MSP/PythonLibrary/phurt/Phurt/Phurt/TScopeData/MONT4k.dat')
 
 import glob
-filelist = glob.glob(zz.nightdir+'*.fits')
+filelist = glob.glob(tt.nightdir+'*.fits')
 
 for ff in filelist:
     tt = tst.skimheaders(ff)
-    if tst.obst.strip()=='FLAT': 
+    if tst.obst.strip()=='object': 
        #print True
-       if ((tst.filters[0].strip()=='202') | (tst.filters[1].strip()=='202')  ):
+       if ((tst.filters[0].strip()=='Harris-V')): print True
+	#if (tst.objn.strip()=='AGC120193'):
+	  #  print True
+
+
+# | (tst.filters[1].strip()=='202')  ):
        	  print True
-	  #if (tst.objn.strip()=='AGC120193'):
-	   #  print True
-
-
-
 
 
 

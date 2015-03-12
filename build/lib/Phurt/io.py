@@ -110,7 +110,7 @@ def read_filelist(infile):
 def write_new_fits(data,hdr,outfile):
 
     #
-    # might be fun to have an option for lighter/heavier formats...currently set to write 16-bit floats.
+    # might be fun to have an option for lighter/heavier formats...currently set to write 16-bit floats (OUCH).
     #
     
     dataf = [[float(val) for val in inner] for inner in data]

@@ -97,7 +97,10 @@ class DivineObject(object):
         DivineObject.breaknight(self,self.nightdir)
 
     def on_target(self):
-        self.targetstring = str(self.rapos[0])+str(self.rapos[1])+'+'+str(self.decpos[0])+str(self.decpos[1])
+
+        # targetstring is deprecated presently, but may be revived at a later date for nomenclature purposes
+        #
+        #self.targetstring = str(self.rapos[0])+str(self.rapos[1])+'+'+str(self.decpos[0])+str(self.decpos[1])
 
         try:
             if (float(self.analysislst.ras[0])==float(self.rapos[0])) & (float(self.analysislst.ras[1])==float(self.rapos[1])) & (abs(float(self.analysislst.ras[2])-float(self.rapos[2]))<=self.float(self.postol)):
@@ -137,9 +140,9 @@ class DivineObject(object):
                     if ((self.analysislst.filters[0].strip()==self.filtername) | (self.analysislst.filters[1].strip()==self.filtername)  )& ( (DivineObject.on_target(self)==True) | (DivineObject.on_name(self)==True)) & (ff != self.sciexclude): print >>objlst,ff
 
             else:
-                if (self.analysislst.obst.strip()==self.analysislst.header_names['flats'].strip("'")) & (self.analysislst.filters[0].strip()==self.filtername) & (ff != self.flatexclude): print >>filterlst,ff
+                if (self.analysislst.obst.strip()==self.analysislst.header_names['flats'].strip("'")) & (self.analysislst.filters.strip()==self.filtername) & (ff != self.flatexclude): print >>filterlst,ff
                 if self.analysislst.obst.strip()==self.analysislst.header_names['objects'].strip("'"):
-                    if (self.analysislst.filters[0].strip()==self.filtername) & ( (DivineObject.on_target(self)==True) | (DivineObject.on_name(self)==True)) & (ff != self.sciexclude): print >>objlst,ff
+                    if (self.analysislst.filters.strip()==self.filtername) & ( (DivineObject.on_target(self)==True) | (DivineObject.on_name(self)==True)) & (ff != self.sciexclude): print >>objlst,ff
 
         biaslst.close()
         filterlst.close()

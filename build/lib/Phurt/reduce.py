@@ -95,7 +95,7 @@ class ReduceObject: # can this handle a script input? this would probably be the
         self.IMG.get_header_vals(resource_filename('Phurt.TScopeData',self.instrument+'.dat'))
         self.img1,self.hdr1 = self.IMG.readimg_quik(combolist[0].strip())
         #
-        # Take your masterbias, masterflat and make something out of it (single frame right now)
+        # Take your masterbias, masterflat and make something out of it
         #
         xsize = len(self.img1[:,0])
         ysize = len(self.img1[0,:])
@@ -107,14 +107,14 @@ class ReduceObject: # can this handle a script input? this would probably be the
         self.imgf,self.hdrf = self.IMG.readimg_quik(self.flatfile)
         i = 0
         for ff in combolist:
-            filestack[i],self.hdr = self.IMG.readimg_quik(combolist[i].strip())
-            filestack[i] -= self.imgb
-            filestack[i] /= (self.imgf/np.median(self.imgf))
+            filestack[i],self.hdr = self.IMG.readimg_quik(combolist[i].strip())     # read in the science image
+            filestack[i] -= self.imgb                                               # remove the bias
+            filestack[i] /= (self.imgf/np.median(self.imgf))                        # normalize by the flatfield
             i += 1
-        self.medianed = np.median(filestack, axis=0)
+        self.medianed = np.median(filestack, axis=0)                                # this step is painfully slow
 
         if writeflag!=False:
-            io.write_new_fits(self.medianed,self.hdr,self.finalsci)
+            io.write_new_fits(self.medianed,self.hdr,self.scifile)
         #return mastersci,hdrs
 
 
@@ -125,5 +125,9 @@ def run_all(inscript):
     fullobj = ReduceObject(inscript)
     fullobj.biascombine(True)
     fullobj.flatcombine(True)
+
+    #
+    # Note that if you already have the bias and flat created, you can execute just the ReduceObject() initialization, then this sciencecombine step.
+    #
     fullobj.sciencecombine(True)
 

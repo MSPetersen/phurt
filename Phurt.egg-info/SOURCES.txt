@@ -2,10 +2,7 @@ MANIFEST.in
 README.txt
 setup.py
 Phurt/__init__.py
-Phurt/hdi_cals.py
-Phurt/id_cals.py
 Phurt/io.py
-Phurt/kuiper_cals.py
 Phurt/memmanage.py
 Phurt/read_cals.py
 Phurt/reduce.py
