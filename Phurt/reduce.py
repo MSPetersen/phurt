@@ -87,7 +87,7 @@ class ReduceObject: # can this handle a script input? this would probably be the
         #return medianed,hdr
 
 
-    def sciencecombine(self,writeflag,stackflag):
+    def sciencecombine(self,writeflag,stackflag,normalflag):
         print 'Science combination...'
         combolist = io.read_filelist(self.scilist)
         n_files = len(combolist)
@@ -110,6 +110,9 @@ class ReduceObject: # can this handle a script input? this would probably be the
             filestack[i],self.hdr = self.IMG.readimg_quik(combolist[i].strip())     # read in the science image
             filestack[i] -= self.imgb                                               # remove the bias
             filestack[i] /= (self.imgf/np.median(self.imgf))                        # normalize by the flatfield
+            if normalflag:
+                print 'Normalizing image time(s)...'
+                filestack[i] /= self.hdr['EXPTIME']     # normalize for time--this needs to be adapted to be the instrument data
             if not stackflag:
                 last_dot = ff.rfind('.')
                 newfilename = ff[0:last_dot]+'_red.fits'
@@ -134,5 +137,5 @@ def run_all(inscript):
     #
     # Note that if you already have the bias and flat created, you can execute just the ReduceObject() initialization, then this sciencecombine step.
     #
-    fullobj.sciencecombine(True,stackflag=True)
+    fullobj.sciencecombine(True,stackflag=True,normalflag=False)
 
