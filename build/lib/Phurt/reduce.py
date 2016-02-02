@@ -111,6 +111,7 @@ class ReduceObject: # can this handle a script input? this would probably be the
             filestack[i] -= self.imgb                                               # remove the bias
             filestack[i] /= (self.imgf/np.median(self.imgf))                        # normalize by the flatfield
             if normalflag:
+                print 'Normalizing image time(s)...'
                 filestack[i] /= self.hdr['EXPTIME']     # normalize for time--this needs to be adapted to be the instrument data
             if not stackflag:
                 last_dot = ff.rfind('.')

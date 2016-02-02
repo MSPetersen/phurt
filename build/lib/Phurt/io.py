@@ -114,7 +114,10 @@ def write_new_fits(data,hdr,outfile):
     #
     
     dataf = [[float(val) for val in inner] for inner in data]
-    fits.writeto(outfile,dataf,hdr,clobber=True)
+    dataarr = np.array(data, dtype=np.float32)
+    #fits.writeto(outfile,dataf,hdr,clobber=True)
+    fits.writeto(outfile,dataarr,hdr,clobber=True)
+
 	
 	
 
