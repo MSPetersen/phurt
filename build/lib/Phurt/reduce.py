@@ -87,7 +87,17 @@ class ReduceObject: # can this handle a script input? this would probably be the
         #return medianed,hdr
 
 
-    def sciencecombine(self,writeflag,stackflag,normalflag):
+    def sigmaclip(self,img,sigma=3.):
+        # takes image data and clips everything above and below sigma threshold
+        med = np.median(img)
+        var = np.std(img)
+        xx = np.where( np.abs(img - med)/var > sigma )
+        img[xx] = med
+        return img
+
+
+
+    def sciencecombine(self,writeflag,stackflag,normalflag,clipsigma):
         print 'Science combination...'
         combolist = io.read_filelist(self.scilist)
         n_files = len(combolist)
@@ -113,6 +123,8 @@ class ReduceObject: # can this handle a script input? this would probably be the
             if normalflag:
                 print 'Normalizing image time(s)...'
                 filestack[i] /= self.hdr['EXPTIME']     # normalize for time--this needs to be adapted to be the instrument data
+            if clipsigma:
+                filestack[i] = ReduceObject.sigmaclip(self,filestack[i])
             if not stackflag:
                 last_dot = ff.rfind('.')
                 newfilename = ff[0:last_dot]+'_red.fits'
@@ -137,5 +149,5 @@ def run_all(inscript):
     #
     # Note that if you already have the bias and flat created, you can execute just the ReduceObject() initialization, then this sciencecombine step.
     #
-    fullobj.sciencecombine(True,stackflag=True,normalflag=False)
+    fullobj.sciencecombine(True,stackflag=True,normalflag=False,clipsigma=False)
 
